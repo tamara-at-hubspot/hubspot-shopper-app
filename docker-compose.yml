@@ -1,0 +1,17 @@
+version: '2'
+
+services:
+  web:
+    container_name: hubspot-shopper-app-web
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./src:/app/src
+      - ./dist:/app/dist
+      - ./node_modules:/app/node_modules
+    ports:
+      - 3000:3000
+    command: npm run dev
