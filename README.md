@@ -20,7 +20,7 @@ Functionalities:
 Next steps:
 - [x] Use sqlite file db
 - [x] Consolidate environment config
-- [ ] Handle token refresh
+- [x] Handle token refresh
 - [ ] Dockerize
 - [ ] Add List table, associated with hubId, objectTypeId, objectId (0 or 1 list per record for now)
 - [ ] Add Item table

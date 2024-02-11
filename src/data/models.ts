@@ -1,6 +1,6 @@
 import { Sequelize, DataTypes } from "sequelize";
 import type { Model } from "sequelize";
-import config from "./config";
+import config from "../config";
 
 const sequelize = new Sequelize(config.sequelize);
 
@@ -14,7 +14,8 @@ interface OauthTokenAttributes {
   disabled: boolean;
 }
 
-type OauthTokenInstance = Model<OauthTokenAttributes> & OauthTokenAttributes;
+export type OauthTokenInstance = Model<OauthTokenAttributes> &
+  OauthTokenAttributes;
 
 export const OauthToken = sequelize.define<OauthTokenInstance>("OauthToken", {
   hubId: { type: DataTypes.INTEGER, allowNull: false, primaryKey: true },
