@@ -8,13 +8,9 @@ export const useHome = (app: Express) => {
 
     const hubIds = await oauthDao.getAllHubIds();
     res.write(`<p><b>Installs</b>: ${hubIds.length}</p>`);
-    hubIds.slice(0, 10).forEach((hubId) => {
-      res.write(`${hubId}<br>`);
-    });
-    if (hubIds.length > 10) {
-      res.write(`...and more!<br>`);
-    }
+
     res.write(`<p><a href="/oauth">OAuth setup</a>`);
+    res.write(`<p><a href="/hub">Installed hubs</a>`);
 
     res.end();
   });

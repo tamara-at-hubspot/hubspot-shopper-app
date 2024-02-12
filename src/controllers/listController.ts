@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import express from "express";
 import { normalizePath } from "../utils";
-import { body, param, validationResult } from "express-validator";
+import { body, param, query, validationResult } from "express-validator";
 import oauthDao from "../data/daos/oauthDao";
 import listDao from "../data/daos/listDao";
 
@@ -49,6 +49,35 @@ const ListController = () => {
       }
       list = await listDao.createList(req.body);
       return res.status(201).json(list.get());
+    },
+  );
+
+  /**
+   * GET /list
+   *
+   * Get lists for the given object. Example request:
+   * curl http://localhost:3000/list?hubId=39719066&objectTypeId=0-3&objectId=14635242253
+   */
+  router.get(
+    "",
+    query("hubId").isNumeric().notEmpty(),
+    query("objectTypeId").trim().notEmpty().escape(),
+    query("objectId").isNumeric().notEmpty(),
+    async (req, res) => {
+      const result = validationResult(req);
+      if (!result.isEmpty()) {
+        return res.status(400).send({ errors: result.array() });
+      }
+      const { hubId, objectTypeId, objectId } = req.query as any;
+      const list = await listDao.getListForObject(
+        hubId,
+        objectTypeId,
+        objectId,
+      );
+      if (!list) {
+        return res.status(200).json({ results: [] });
+      }
+      return res.status(200).json({ results: [list.get()] });
     },
   );
 
