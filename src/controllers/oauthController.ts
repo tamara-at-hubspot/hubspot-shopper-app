@@ -16,7 +16,11 @@ const OauthController = (basePath: string) => {
   const installPath = "/install";
   const callbackPath = "/callback";
 
-  // Oauth setup UI
+  /**
+   * GET /oauth (text/html)
+   *
+   * Oauth setup UI
+   */
   router.get("", async (req, res) => {
     res.setHeader("Content-Type", "text/html");
     res.write("<h2>HubSpot OAuth 2.0 Setup</h2>");
@@ -42,7 +46,11 @@ const OauthController = (basePath: string) => {
     res.end();
   });
 
-  // request to install the app by initiating OAuth access
+  /**
+   * GET /oauth/install
+   *
+   * Initiate OAuth access to a HubSpot account
+   */
   router.get(installPath, async (req, res) => {
     const redirectUrl = getRedirectUrl(basePath, callbackPath);
     const authorizeUrl = getAuthorizeUrl(redirectUrl);
@@ -50,7 +58,11 @@ const OauthController = (basePath: string) => {
     res.redirect(authorizeUrl); // redirect the user to the HubSpot to give permission
   });
 
-  // accept callback from HubSpot to complete the OAuth handshake
+  /**
+   * GET /oauth/callback
+   *
+   * Accept callback from HubSpot to complete the OAuth handshake
+   */
   router.get(callbackPath, async (req, res) => {
     const code = req.query?.code as string | undefined;
     console.log("Exchanging auth code for token:", code);

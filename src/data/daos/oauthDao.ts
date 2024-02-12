@@ -35,6 +35,10 @@ async function upsertOauthToken(
   return record;
 }
 
+async function isInstalledHub(hubId: number) {
+  return !!(await OauthToken.findByPk(hubId));
+}
+
 async function getFirstHubId(): Promise<number | undefined> {
   const record = await OauthToken.findOne();
   return record?.hubId;
@@ -46,6 +50,7 @@ async function getAllHubIds(): Promise<number[]> {
 }
 
 export default {
+  isInstalledHub,
   getFirstHubId,
   getAllHubIds,
   getOauthTokenOrThrow,

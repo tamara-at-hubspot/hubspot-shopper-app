@@ -46,9 +46,9 @@ Next steps:
 - [x] Consolidate environment config
 - [x] Handle token refresh
 - [x] Dockerize
-- [ ] Add List table, associated with hubId, objectTypeId, objectId (0 or 1 list per record for now)
+- [x] Add List table, associated with hubId, objectTypeId, objectId (0 or 1 list per record for now)
 - [ ] Add Item table
 - [ ] Add enpoint to retrieve list with items for a record
-- [ ] Add endpoint to create a list if there isn't one
+- [x] Add endpoint to create a list if there isn't one
 - [ ] Add endpoint to update list items
 - [ ] Add endpoint to delete a list
