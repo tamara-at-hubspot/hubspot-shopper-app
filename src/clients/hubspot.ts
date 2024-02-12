@@ -1,6 +1,6 @@
 import { Client } from "@hubspot/api-client";
 import config from "../config";
-import dao from "../data/dao";
+import oauthDao from "../data/daos/oauthDao";
 
 const developerClient = new Client({
   developerApiKey: config.env.HUBSPOT_DEVELOPER_API_KEY,
@@ -20,12 +20,12 @@ async function exchangeAuthCodeForToken(
   const { hubId } = await developerClient.oauth.accessTokensApi.get(
     tokensInfo.accessToken,
   );
-  const record = await dao.upsertOauthToken(hubId, tokensInfo);
+  const record = await oauthDao.upsertOauthToken(hubId, tokensInfo);
   return record.accessToken;
 }
 
 async function getOrRefreshAccessToken(hubId: number): Promise<string> {
-  let record = await dao.getOauthTokenOrThrow(hubId);
+  let record = await oauthDao.getOauthTokenOrThrow(hubId);
   if (record.isAccessTokenValid()) {
     return record.accessToken;
   }
@@ -44,7 +44,7 @@ async function getOrRefreshAccessToken(hubId: number): Promise<string> {
   } catch (err) {
     throw new Error(`Cannot refresh token: ${err}`);
   }
-  record = await dao.upsertOauthToken(hubId, tokensInfo);
+  record = await oauthDao.upsertOauthToken(hubId, tokensInfo);
   return record.accessToken;
 }
 

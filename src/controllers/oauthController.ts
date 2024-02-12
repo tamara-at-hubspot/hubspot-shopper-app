@@ -3,7 +3,7 @@ import express from "express";
 import { normalizePath, removeTrailingSlash } from "../utils";
 import config from "../config";
 import hubspot from "../clients/hubspot";
-import dao from "../data/dao";
+import oauthDao from "../data/daos/oauthDao";
 
 export const useOauth = (app: Express, path: string) => {
   const basePath = normalizePath(path);
@@ -21,7 +21,7 @@ const OauthController = (basePath: string) => {
     res.setHeader("Content-Type", "text/html");
     res.write("<h2>HubSpot OAuth 2.0 Setup</h2>");
 
-    const hubId = await dao.getFirstHubId();
+    const hubId = await oauthDao.getFirstHubId();
     if (hubId === undefined) {
       res.write(
         `<a href="${basePath}${installPath}">Click here to install the app</a>`,
@@ -29,7 +29,7 @@ const OauthController = (basePath: string) => {
     } else {
       const apiClient = await hubspot.getApiClient(hubId);
       res.write("<h3>API Test</h3>");
-      res.write(`<b>Hub ID</b>: ${await dao.getFirstHubId()}<br>`);
+      res.write(`<b>Hub ID</b>: ${await oauthDao.getFirstHubId()}<br>`);
       res.write(`<b>Access token</b>: [redacted]<p>`);
       const deals = await apiClient.crm.deals.basicApi.getPage(1);
       deals.results.forEach((deal) => {

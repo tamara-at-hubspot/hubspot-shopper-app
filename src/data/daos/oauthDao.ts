@@ -1,5 +1,5 @@
 import type { TokenResponseIF } from "@hubspot/api-client/lib/codegen/oauth";
-import { OauthToken } from "./models";
+import { OauthToken } from "../models";
 
 async function getOauthTokenOrThrow(hubId: number) {
   const record = await OauthToken.findByPk(hubId);

@@ -1,7 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
-import { useOauth } from "./controllers/oauth";
+import { useOauth } from "./controllers/oauthController";
 import { useHome } from "./views/home";
 import config from "./config";
 
