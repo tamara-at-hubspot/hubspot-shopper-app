@@ -26,7 +26,7 @@ async function exchangeAuthCodeForToken(
 
 async function getOrRefreshAccessToken(hubId: number): Promise<string> {
   let record = await dao.getOauthTokenOrThrow(hubId);
-  if (dao.isAccessTokenValid(record)) {
+  if (record.isAccessTokenValid()) {
     return record.accessToken;
   }
 

@@ -1,5 +1,4 @@
 import type { TokenResponseIF } from "@hubspot/api-client/lib/codegen/oauth";
-import type { OauthTokenInstance } from "./models";
 import { OauthToken } from "./models";
 
 async function getOauthTokenOrThrow(hubId: number) {
@@ -13,34 +12,27 @@ async function getOauthTokenOrThrow(hubId: number) {
 async function upsertOauthToken(
   hubId: number,
   tokensInfo: TokenResponseIF,
-): Promise<OauthTokenInstance> {
+): Promise<OauthToken> {
   const { accessToken, refreshToken, expiresIn } = tokensInfo;
   let record = await OauthToken.findByPk(hubId);
   if (record !== null) {
     record.set({
       refreshToken,
       accessToken,
-      refreshedAt: Date.now(),
-      expiresIn: expiresIn * 1000 * 0.8, // milliseconds
-      disabled: false,
+      expiresIn: expiresIn * 0.8,
+      refreshedAt: new Date(),
     });
     record.save();
   } else {
     record = await OauthToken.create({
       hubId,
-      createdAt: Date.now(),
       refreshToken,
       accessToken,
-      refreshedAt: Date.now(),
-      expiresIn: expiresIn * 1000 * 0.8, // milliseconds
-      disabled: false,
+      expiresIn: expiresIn * 0.8,
+      refreshedAt: new Date(),
     });
   }
   return record;
-}
-
-function isAccessTokenValid(record: OauthTokenInstance): boolean {
-  return Date.now() < record.refreshedAt + record.expiresIn;
 }
 
 async function getFirstHubId(): Promise<number | undefined> {
@@ -57,6 +49,5 @@ export default {
   getFirstHubId,
   getAllHubIds,
   getOauthTokenOrThrow,
-  isAccessTokenValid,
   upsertOauthToken,
 };
