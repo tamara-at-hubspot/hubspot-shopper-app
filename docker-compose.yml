@@ -11,6 +11,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./src:/app/src
+      - ./db:/app/db
     ports:
       - 8080:3000
     command: ["npm", "start"]

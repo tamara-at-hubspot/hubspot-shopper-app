@@ -1,4 +1,4 @@
-import { InferCreationAttributes } from "sequelize";
+import { InferAttributes, InferCreationAttributes } from "sequelize";
 import { List } from "../models";
 
 function getListForObject(
@@ -31,10 +31,30 @@ function createList(list: InferCreationAttributes<List>): Promise<List> {
   return List.create(list);
 }
 
+async function updateList(update: InferAttributes<List>): Promise<List> {
+  const list = await List.findByPk(update.id);
+  if (list === null) {
+    throw new Error(`List ${update.id} not found`);
+  }
+  await list.update(List.sanitizeForUpdate(update));
+  await list.save();
+  return list;
+}
+
+async function deleteList(id: string): Promise<void> {
+  const list = await List.findByPk(id);
+  if (list === null) {
+    throw new Error(`List ${id} not found`);
+  }
+  await list.destroy();
+}
+
 export default {
-  createList,
   getList,
   getListForObject,
   getHubIds,
   getListsForHub,
+  createList,
+  updateList,
+  deleteList,
 };

@@ -5,6 +5,8 @@ import { body, param, query, validationResult } from "express-validator";
 import oauthDao from "../data/daos/oauthDao";
 import listDao from "../data/daos/listDao";
 
+// TODO add express-preconditions later
+
 export const useList = (app: Express, path: string) => {
   const basePath = normalizePath(path);
   app.use(basePath, ListController());
@@ -99,6 +101,62 @@ const ListController = () => {
         return res.status(404).send();
       }
       return res.status(200).json(list.get());
+    },
+  );
+
+  /**
+   * PUT /list/:listId
+   *
+   * Replace a list by ID
+   */
+  router.put(
+    "/:listId",
+    param("listId").trim().notEmpty().escape(),
+    // -- ignore --
+    // body("hubId").isNumeric(),
+    // body("objectTypeId").trim().notEmpty().escape(),
+    // body("objectId").isNumeric(),
+    body("name").trim().isLength({ min: 1, max: 200 }).escape(),
+    body("description")
+      .optional()
+      .trim()
+      .isLength({ min: 0, max: 1000 })
+      .escape(),
+    async (req, res) => {
+      const result = validationResult(req);
+      if (!result.isEmpty()) {
+        return res.status(400).send({ errors: result.array() });
+      }
+      const id = req.params?.listId;
+      try {
+        const list = await listDao.updateList({ ...req.body, id });
+        return res.status(200).json(list.get());
+      } catch (err) {
+        return res.status(404).send();
+      }
+    },
+  );
+
+  /**
+   * DELETE /list/:listId
+   *
+   * Delete a list by ID
+   */
+  router.delete(
+    "/:listId",
+    param("listId").trim().notEmpty().escape(),
+    async (req, res) => {
+      const result = validationResult(req);
+      if (!result.isEmpty()) {
+        return res.status(400).send({ errors: result.array() });
+      }
+      const id = req.params?.listId;
+      try {
+        await listDao.deleteList(id);
+        return res.status(200).send();
+      } catch (err) {
+        return res.status(404).send();
+      }
     },
   );
 

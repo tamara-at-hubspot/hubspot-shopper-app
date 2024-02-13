@@ -57,6 +57,19 @@ export class List extends Model<
 
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
+
+  static sanitizeForUpdate(
+    update: InferAttributes<List>,
+  ): Partial<InferAttributes<List>> {
+    const sanitized: Partial<InferAttributes<List>> = {};
+    ["name", "description"].forEach((field) => {
+      if (field in update) {
+        // @ts-ignore
+        sanitized[field] = update[field];
+      }
+    });
+    return sanitized;
+  }
 }
 
 List.init(
