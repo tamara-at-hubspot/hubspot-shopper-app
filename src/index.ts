@@ -21,6 +21,6 @@ useOauth(app, "/oauth");
 useList(app, "/list");
 useHub(app, "/hub");
 
-app.listen(3000, () =>
+app.listen(config.env.PORT, () =>
   console.log(`Starting your app on ${config.env.APP_BASE_URL}`),
 );

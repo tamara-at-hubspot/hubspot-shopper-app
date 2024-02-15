@@ -2,10 +2,12 @@ FROM node:16
 
 WORKDIR /app
 
-COPY package*.json .
-COPY .env* .
-COPY tsconfig.json .
-
+COPY package*.json ./
 RUN npm ci
 
-EXPOSE 3000
+COPY ./src ./src
+COPY tsconfig.json ./
+
+EXPOSE 8080
+
+CMD ["npm", "start"]

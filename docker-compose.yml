@@ -5,13 +5,13 @@ services:
     container_name: hubspot-shopper-app-web
     environment:
       NODE_ENV: development
-      APP_BASE_URL: http://localhost:8080
+      PORT: 8080
+    env_file:
+      - .env.development
     build:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./src:/app/src
       - ./db:/app/db
     ports:
-      - 8080:3000
-    command: ["npm", "start"]
+      - 3000:8080

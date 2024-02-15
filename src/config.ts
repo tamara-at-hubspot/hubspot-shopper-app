@@ -8,6 +8,7 @@ interface Env {
   HUBSPOT_CLIENT_SECRET: string;
   HUBSPOT_DEVELOPER_API_KEY: string;
   APP_BASE_URL: string;
+  PORT: number;
 }
 
 interface Config {
@@ -61,13 +62,22 @@ function getEnvOrThrow(name: string): string {
   }
 }
 
+function getEnvOrDefault(name: string, defaultValue: string): string {
+  if (name in process.env) {
+    return (process.env[name] ?? "").trim();
+  } else {
+    return defaultValue;
+  }
+}
+
 const config: Config = {
   ...partialConfig,
   env: {
     HUBSPOT_CLIENT_ID: getEnvOrThrow("HUBSPOT_CLIENT_ID"),
     HUBSPOT_CLIENT_SECRET: getEnvOrThrow("HUBSPOT_CLIENT_SECRET"),
     HUBSPOT_DEVELOPER_API_KEY: getEnvOrThrow("HUBSPOT_DEVELOPER_API_KEY"),
-    APP_BASE_URL: getEnvOrThrow("APP_BASE_URL"),
+    APP_BASE_URL: getEnvOrDefault("APP_BASE_URL", "http://localhost"), // just a placeholder
+    PORT: parseInt(getEnvOrThrow("PORT")),
   },
 };
 
